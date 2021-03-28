@@ -1,0 +1,10 @@
+
+npm i --save body-parser
+
+npm i --save mongoose
+
+[nodemon] app crashed - waiting for file changes before starting...
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+sudo n latest
