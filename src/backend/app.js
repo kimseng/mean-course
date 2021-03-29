@@ -1,6 +1,7 @@
 const express = require("express");
-const Post = require("../backend/models/post");
 const mongoose = require("mongoose");
+//const Post = require("../backend/models/post");
+const postsRoutes = require("./routes/posts");
 const app = express();
 
 mongoose
@@ -32,28 +33,17 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
   );
   next();
 });
 
-app.post("/api/posts", (req, res, next) => {
-  /* const post = new Post({
-    title: req.body.title,
-    content: req.body.content,
-  }); */
+app.use("/api/posts", postsRoutes);
 
-  const post = req.boby;
+module.exports = app;
 
-  console.log(post);
-  res.status(200).json({
-    message: "Post added successfully!",
-  });
-});
-
-app.get("/api/posts", (req, res, next) => {
-  const posts = [
-    { id: "fa323d", title: "First Post", content: "This is my post content 1" },
+/* const posts = [
+    { id: "fa3239", title: "First Post", content: "This is my post content 1" },
     {
       id: "fa333d",
       title: "Second Post",
@@ -62,11 +52,4 @@ app.get("/api/posts", (req, res, next) => {
     { id: "fa343d", title: "Third Post", content: "This is my post content 3" },
     { id: "fa353d", title: "Forth Post", content: "This is my post content 4" },
     { id: "fa363d", title: "Fifth Post", content: "This is my post content 5" },
-  ];
-  res.status(200).json({
-    message: "Posts fetched successfully",
-    posts: posts,
-  });
-});
-
-module.exports = app;
+  ]; */

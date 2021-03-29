@@ -41,16 +41,17 @@ const onListening = () => {
 
 const port = normalizePort(process.env.PORT || "3000");
 
-app.set("port", port);
+//app.set("port", port);
 const server = http.createServer(app);
 /* const server = http.createServer((req, res) => {
   res.end("Server is starting now");
 }); */
-server.on("error", onError);
-server.on("Listening", onListening);
+//server.on("error", onError);
+//server.on("Listening", onListening);
 server.listen(port);
 
-/* const server = http.createServer((req, res) => {
+/* const http = require("http");
+const server = http.createServer((req, res) => {
   res.end("Server is starting now");
 });
 
