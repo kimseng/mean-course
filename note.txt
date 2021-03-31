@@ -1,3 +1,12 @@
+======Need to more study=====
+1-Obserable, Subscribe
+2-Why create interface model like auth-data.model.ts,post.model.ts, it used to inject in component class at contructor
+3-Typescript declaration const authData: AuthData={email: email,password:password};
+4-
+======Angular tip======
+Generate ng Component, when run command ng g c (it will auto create in src/app)
+ng g c auth/login  (Result src/app/auth/login/login.compoment.*)
+
 =======Git common use=======
 To revert to previous commit, it will lost history, scary task
 git reset b709c6118d35cef9b99ce47d4584cf0e48e24429
@@ -17,6 +26,9 @@ db.posts.find()
 
 Update load image
 npm i --save multer
+npm i --save mongoose-unique-validator
+npm i --save bcrypt
+npm i --save jsonwebtoken
 
 [nodemon] app crashed - waiting for file changes before starting...
 sudo npm cache clean -f

@@ -36,7 +36,6 @@ export class PostListComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.currentPage = pageData.pageIndex + 1;
     this.postsPerPage = pageData.pageSize;
-
     this.PostsService.getPosts(this.postsPerPage, this.currentPage);
   }
   //AFter delete, get post based on condition postPerPage and currentPage
