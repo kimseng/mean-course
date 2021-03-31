@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const mongoose = require("mongoose");
 //const Post = require("../backend/models/post");
@@ -23,6 +24,10 @@ app.use(bodyparser.urlencoded({ extended: false })); */
 /**From Express >4.16 */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+/**Important setting to make your asset (image, css) working
+ * http://localhost:3000/images/upload-image-1617138354828.png
+ */
+app.use("/images", express.static(path.join("backend/images")));
 
 /**Add middle ware */
 app.use((req, res, next) => {
