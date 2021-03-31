@@ -107,15 +107,29 @@ router.put(
     });
   }
 );
-
+//http://localhost:3000/api/posts?pageSize=2&currentPage=2&Something=test
 router.get("", (req, res, next) => {
-  Post.find().then((documents) => {
-    res.status(200).json({
-      message: "Posts fetched successfully",
-      posts: documents,
+  console.log(req.query);
+  const pageSize = +req.query.pageSize; //+ sign to convert to number
+  const currentPage = +req.query.page;
+  const postQuery = Post.find();
+  let fetchPosts;
+  if (pageSize && currentPage) {
+    postQuery.skip(pageSize * (currentPage - 1)).limit(pageSize);
+  }
+  postQuery
+    .then((documents) => {
+      fetchPosts = documents;
+      return Post.count();
+      //console.log(res.json({ posts: documents }));
+    })
+    .then((count) => {
+      res.status(200).json({
+        message: "Posts fetched successfully",
+        posts: fetchPosts,
+        maxPosts: count,
+      });
     });
-    //console.log(res.json({ posts: documents }));
-  });
 });
 
 router.get("/:id", (req, res, next) => {
