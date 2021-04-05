@@ -16,11 +16,15 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { PostListComponent } from './post-list/post-list.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { PostsService } from './posts/posts.service';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { SignupComponent } from './auth/signup/signup.component';
 import { LoginComponent } from './auth/login/login.component';
+import { AuthInterceptor } from './auth/auth-interceptor';
+import { ErrorComponent } from './error/error.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ErrorInterceptor } from './error.interceptor';
 
 @NgModule({
   declarations: [
@@ -30,6 +34,7 @@ import { LoginComponent } from './auth/login/login.component';
     PostListComponent,
     LoginComponent,
     SignupComponent,
+    ErrorComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,12 +51,17 @@ import { LoginComponent } from './auth/login/login.component';
     HttpClientModule,
     MatProgressSpinnerModule,
     MatPaginatorModule,
+    MatDialogModule,
   ],
   /*There are 2 options to inject service
   1-Add providers:[postService]
   2-@Injectable({ providedIn: 'root' }) in posts.service.ts
   */
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent],
+  entryComponents: [ErrorComponent],
 })
 export class AppModule {}

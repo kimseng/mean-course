@@ -28,6 +28,7 @@ export class PostsService {
                 content: post.content,
                 id: post._id,
                 imagePath: post.imagePath,
+                creator: post.creator,
               };
             }),
             maxPosts: postData.maxPosts,
@@ -35,6 +36,8 @@ export class PostsService {
         })
       )
       .subscribe((transformedPostData) => {
+        //console.log(transformedPostData);
+
         this.posts = transformedPostData.posts;
         this.postsUpdated.next({
           posts: [...this.posts],
@@ -56,6 +59,7 @@ export class PostsService {
       title: string;
       content: string;
       imagePath: string;
+      creator: string;
     }>('http://localhost:3000/api/posts/' + id);
     /* return { ...this.posts.find((p) => p.id === id) }; */
   }
@@ -105,6 +109,7 @@ export class PostsService {
         title: title,
         content: content,
         imagePath: image,
+        creator: null,
       };
     }
     this.http

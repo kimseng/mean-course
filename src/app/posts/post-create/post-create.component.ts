@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 //import { Post } from '../post.model';
 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { mineType } from './mine-type.validator';
@@ -11,7 +13,7 @@ import { mineType } from './mine-type.validator';
   templateUrl: './post-create.component.html',
   styleUrls: ['./post-create.component.css'],
 })
-export class PostCreateComponent implements OnInit {
+export class PostCreateComponent implements OnInit, OnDestroy {
   enteredTitle = '';
   enteredContent = '';
   post: Post;
@@ -20,13 +22,20 @@ export class PostCreateComponent implements OnInit {
   private mode = 'create';
   private postId: string;
   imagePreview: string;
+  private authStatusSub: Subscription;
 
   constructor(
     public PostsService: PostsService,
-    public router: ActivatedRoute
+    public router: ActivatedRoute,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authStatusSub = this.authService
+      .getAuthStatusListener()
+      .subscribe((authStatus) => {
+        this.isLoading = false;
+      });
     this.form = new FormGroup({
       title: new FormControl(null, {
         validators: [Validators.required, Validators.minLength(3)],
@@ -49,6 +58,7 @@ export class PostCreateComponent implements OnInit {
             title: postData.title,
             content: postData.content,
             imagePath: postData.imagePath,
+            creator: postData.creator,
           };
           this.form.setValue({
             title: this.post.title,
@@ -106,5 +116,8 @@ export class PostCreateComponent implements OnInit {
     /* this.postCreated.emit(post); */
     //this.PostsService.addPost(form.value.title, form.value.content);
     //clear form after adding post
+  }
+  ngOnDestroy() {
+    this.authStatusSub.unsubscribe();
   }
 }

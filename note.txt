@@ -10,6 +10,7 @@ ng g c auth/login  (Result src/app/auth/login/login.compoment.*)
 =======Git common use=======
 To revert to previous commit, it will lost history, scary task
 git reset b709c6118d35cef9b99ce47d4584cf0e48e24429
+git remote remove origin https://gitlab.com/oramaster/mean-stack.git
 
 To
 npm i --save body-parser

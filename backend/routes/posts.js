@@ -7,7 +7,7 @@ const {
   createPostfix,
 } = require("typescript");
 const { path } = require("../app");
-
+const checkAuth = require("../middleware/check-auth");
 const router = express.Router();
 /* const MINE_TYPE_MAP = {
   "images/png": "png",
@@ -46,6 +46,7 @@ const storage = multer.diskStorage({
 
 router.post(
   "",
+  checkAuth,
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
     const url = req.protocol + "://" + req.get("host");
@@ -53,26 +54,36 @@ router.post(
       title: req.body.title,
       content: req.body.content,
       imagePath: url + "/images/" + req.file.filename,
+      creator: req.userData.userId,
     });
+    console.log(req.userData);
+    //return res.status(200).json({});
 
     console.log("New Post => " + post);
-    post.save().then((createdPost) => {
-      res.status(200).json({
-        message: "Post added successfully!",
-        //Shorten Form using spread operator
-        post: {
-          ...createdPost,
-          id: createdPost._id,
-        },
-        /**Long form */
-        /* post: {
+    post
+      .save()
+      .then((createdPost) => {
+        res.status(200).json({
+          message: "Post added successfully!",
+          //Shorten Form using spread operator
+          post: {
+            ...createdPost,
+            id: createdPost._id,
+          },
+          /**Long form */
+          /* post: {
           id: createdPost._id,
           title: createdPost.title,
           content: createdPost.content,
           imagePath: createdPost.imagePath,
         }, */
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message: "Creating a post failed.",
+        });
       });
-    });
   }
 );
 
@@ -81,6 +92,7 @@ router.post(
  */
 router.put(
   "/:id",
+  checkAuth,
   multer({ storage: storage }).single("image"),
   (req, res, next) => {
     //Get image file url in update
@@ -99,12 +111,28 @@ router.put(
       title: req.body.title,
       content: req.body.content,
       imagePath: imagePath,
+      creator: req.userData.userId,
     });
-    console.log("Before update to db=>" + post);
-    Post.updateOne({ _id: req.params.id }, post).then((result) => {
-      console.log(result);
-      res.status(200).json({ message: "Update successfully!" });
-    });
+    //console.log("Before update to db=>" + post);
+    console.log(req.userData, req.userData.userId);
+    console.log("Post Id to update =>" + req.params.id);
+    //return res.status(200).json({});
+
+    Post.updateOne({ _id: req.params.id, creator: req.userData.userId }, post)
+      .then((result) => {
+        console.log(result);
+        if (result.nModified > 0) {
+          res.status(200).json({ message: "Update successfully!" });
+        } else {
+          res.status(401).json({ message: "Not authorized!" });
+          next();
+        }
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message: "Couldn't update post",
+        });
+      });
   }
 );
 //http://localhost:3000/api/posts?pageSize=2&currentPage=2&Something=test
@@ -129,25 +157,42 @@ router.get("", (req, res, next) => {
         posts: fetchPosts,
         maxPosts: count,
       });
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Fetching post failed.",
+      });
     });
 });
 
 router.get("/:id", (req, res, next) => {
-  Post.findById(req.params.id).then((post) => {
-    if (post) {
-      res.status(200).json(post);
-    } else {
-      res.status(404).json({ message: "Post not found!" });
-    }
-  });
+  Post.findById(req.params.id)
+    .then((post) => {
+      if (post) {
+        res.status(200).json(post);
+      } else {
+        res.status(404).json({ message: "Post not found!" });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({
+        message: "Fetching post failed.",
+      });
+    });
 });
 
-router.delete("/:id", (req, res, next) => {
+router.delete("/:id", checkAuth, (req, res, next) => {
   //console.log(req.params.id);
-  Post.deleteOne({ _id: req.params.id }).then((result) => {
-    console.log(result);
-  });
-  res.status(200).json({ message: "Post deleted!" });
+  Post.deleteOne({ _id: req.params.id, creator: req.userData.userId }).then(
+    (result) => {
+      console.log(result);
+      if (result.n > 0) {
+        res.status(200).json({ message: "Update successfully!" });
+      } else {
+        res.status(401).json({ message: "Not authorized!" });
+      }
+    }
+  );
 });
 
 module.exports = router;
