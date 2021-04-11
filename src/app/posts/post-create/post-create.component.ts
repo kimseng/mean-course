@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { Post } from '../post.model';
 import { PostsService } from '../posts.service';
 import { mineType } from './mine-type.validator';
+
 @Component({
   selector: 'app-post-create',
   templateUrl: './post-create.component.html',

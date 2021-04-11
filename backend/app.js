@@ -4,12 +4,13 @@ const mongoose = require("mongoose");
 //const Post = require("../backend/models/post");
 const postsRoutes = require("./routes/posts");
 const userRoutes = require("./routes/user");
-
 const app = express();
 
 mongoose
   .connect(
-    "mongodb+srv://loanmg:Welcome24@cluster0.uqmm7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "mongodb+srv://loanmg:" +
+      process.env.MONGO_ATLAS_PWD +
+      "@cluster0.uqmm7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
     { useNewUrlParser: true, useUnifiedTopology: true }
   )
   .then(() => {
@@ -29,8 +30,8 @@ app.use(express.json());
 /**Important setting to make your asset (image, css) working
  * http://localhost:3000/images/upload-image-1617138354828.png
  */
-app.use("/images", express.static(path.join("backend/images")));
-
+//app.use("/images", express.static(path.join("backend/images")));  //For Dev
+app.use("/images", express.static(path.join(process.env.IMG_PATH))); //For Prod
 /**Add middle ware */
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

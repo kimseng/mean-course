@@ -1,0 +1,40 @@
+====Install on Mac=====
+
+sudo mkdir -p /data/db
+sudo chown -R `id -un` /data/db
+cd /usr/local/bin
+>mongod (to start mongo server)
+
+
+
+On Windows
+start mongodb service
+cd C:\MongoDb\Server\3.2\bin
+>mongod
+Create folder for database like D:\mongodb\data\db
+>mongod --dbpath D:\mongodb\data\db
+open new command prompt
+>mongo
+>show dbs
+>use quote_db
+
+Find total qty by product name
+Name: Y
+Prod: { a: 5, b: 3}
+Name: X
+Prod: { a: 2, b: 3}
+
+db.test.group({key:{'Name':1},reduce:function(curr,result){ result.total+=curr.Prod.a+curr.Prod.b;}, initial:{total:0} });
+=====Regular Expression========
+db.employees.find({empName:{$regex:"kimseng"}});
+db.employees.find({empName:{$regex:/^k/}});  --start with k
+db.employees.find({empName:{$regex:/k$/}});  --ending with k
+db.employees.find({empName:/k$/});  --ending with k
+db.employees.find({empName:/k$/,$option: 'i'});  --ending with k, accept both small or capital key
+db.employees.find({empName:/k$/,$option: 'i'}).limit(1);
+db.employees.find({empName:/k$/,$option: 'i'}).sort({$natural}:-1}).limit(1);
+
+======Map-Reduce=======
+db.loanDetails.remove({});  //To remove all in collection
+
+

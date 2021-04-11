@@ -25,14 +25,36 @@ show collections
 use myFirstDatabase
 db.posts.find()
 
+
+
+
 Update load image
 npm i --save multer
 npm i --save mongoose-unique-validator
 npm i --save bcrypt
 npm i --save jsonwebtoken
 
+ng build --prod
+
 [nodemon] app crashed - waiting for file changes before starting...
 sudo npm cache clean -f
 sudo npm install -g n
 sudo n stable
 sudo n latest
+
+==========Elastic Beanstalk EB CLI===========
+pip3 install awscli --user
+pip3 install awsebcli --upgrade --user
+pip3 uninstall awscli
+pip3 uninstall awsebcli
+
+which eb
+/Users/kimseng/Library/Python/3.7/bin/eb
+export PATH=$PATH:$HOME/Library/Python/3.7/bin
+
+Correct way to install awsebcli
+git clone https://github.com/aws/aws-elastic-beanstalk-cli-setup.git
+
+
+
+

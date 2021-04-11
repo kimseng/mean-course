@@ -1,0 +1,7 @@
+{
+  "env": {
+    "MONGO_ATLAS_PWD": "Welcome24",
+    "JWT_KEY": "secret_this_should_be_longer",
+    "IMG_PATH": "backend/images"
+  }
+}
